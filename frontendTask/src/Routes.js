@@ -30,7 +30,7 @@ const Routes = () => (
   <Router>
     <Switch>
       <Route path="/" exact component={Gallery} />
-      <Route path="/vr" exact component={VRScene} />
+      <Route path="/vr/:name" exact component={VRScene} />
       <Route component={NoMatch} />
     </Switch>
   </Router>

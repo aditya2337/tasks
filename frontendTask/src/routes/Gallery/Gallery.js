@@ -11,7 +11,12 @@ export default class Gallery extends Component {
   renderThumbnails = () =>
     this.props.galleryImages.map((img, index) => (
       <div key={index} className="fl w-50 w-25-m w-20-l pa2">
-        <Link to="/vr" className="db link dim tc">
+        <Link
+          to={{
+            pathname: `/vr/${img.name}`,
+            state: { url: img.pano }
+          }}
+          className="db link dim tc">
           <img
             style={{ height: '10vh' }}
             src={img.pano}
