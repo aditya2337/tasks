@@ -1,7 +1,7 @@
 // Server domain address
 
 const config = {
-  URI: 'http://localhost:3000'
+  URI: 'http://139.59.19.97'
 };
 
 export default config;
