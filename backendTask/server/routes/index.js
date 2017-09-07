@@ -3,6 +3,7 @@ var express = require('express');
 var router = express.Router();
 var Invite = require('../model/schema/inviteSchema');
 var User = require('../model/schema/userSchema');
+var Questions = require('../model/schema/questionsSchema');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
 const uuidv1 = require('uuid/v1');
@@ -25,6 +26,27 @@ router.get('/not', function(req, res, next) {
 router.get('/auth/google/failure', (req, res) =>
   res.redirect(`${config.host}/auth-failed`)
 );
+
+router.get('/questions', (req, res) => {
+  Questions.find({}, (err, questions) => {
+    if (err) return res.json({ error: err });
+    if (!questions) return res.json({ success: false });
+    res.json({ success: true, questions });
+  });
+});
+
+router.put('/submit', (req, res) => {
+  User.findOneAndUpdate(
+    { email: req.body.email },
+    { score: req.body.score },
+    (err, user) => {
+      if (err) return res.json({ error: err });
+      if (!user) return res.json({ success: false });
+
+      res.json({ success: true, user });
+    }
+  );
+});
 
 router.get('/check-validity', (req, res) => {
   User.findOne({ token: req.query.token }, (err, user) => {

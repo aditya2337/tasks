@@ -2,7 +2,7 @@ import actionTypes from './actions/actionTypes';
 
 const { REQUEST_SENDINVITE, RECEIVE_SENDINVITE } = actionTypes;
 
-const adminReducer = (
+const interviewReducer = (
   state = {
     isSendingInvite: false,
     inviteSent: false,
@@ -26,4 +26,4 @@ const adminReducer = (
   }
 };
 
-export default adminReducer;
+export default interviewReducer;
