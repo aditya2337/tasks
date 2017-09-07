@@ -5,7 +5,6 @@ import Qa from './Qa';
 const Interview = props => (
   <div>
     <h4>Note: If Page refreshed the score will not be counted</h4>
-    {console.log(props)}
     {props.questions.length >= 1 ? (
       props.questions.map(
         ({ question, number, answer, options }) =>

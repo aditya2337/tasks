@@ -7,6 +7,7 @@ import Admin from './routes/Admin';
 import LoginByGoogle from './routes/LoginByGoogle';
 import AuthFailed from './routes/AuthFailed';
 import Interview from './routes/Interview';
+import Scores from './routes/Scores';
 
 const NoMatch = ({ location }) => (
   <section className="flex items-center flex-column justify-center h-100 bg-washed-blue">
@@ -44,6 +45,7 @@ const Routes = () => (
   <Router>
     <Switch>
       <AdminLayout path="/" exact component={Admin} />
+      <AdminLayout path="/scores" exact component={Scores} />
       <Route path="/interview" exact component={Interview} />
       <Route path="/interview/:token" component={LoginByGoogle} />
       <Route path="/auth-failed" exact component={AuthFailed} />

@@ -39,7 +39,7 @@ passport.use(
 
           // set the user's local credentials
           newUser.email = profile.emails[0].value;
-          newUser.inviteToken = token;
+          newUser.token = token;
           newUser.oauth_provider = 'google';
           // save the user
           newUser.save(function(err) {

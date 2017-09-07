@@ -34,9 +34,9 @@ const Navigation = props => (
         style={menuItemStyles}
       />
       <MenuItem
-        value="/admin"
+        value="/scores"
         primaryText="Interviewee scores"
-        containerElement={<Link to="/" />}
+        containerElement={<Link to="/scores" />}
         leftIcon={<Contacts color="#6B7C93" />}
         style={menuItemStyles}
       />

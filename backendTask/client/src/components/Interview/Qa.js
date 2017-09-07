@@ -39,7 +39,7 @@ export default class Qa extends Component {
   };
 
   render() {
-    const { question, number, answer, options } = this.props;
+    const { question, number, options } = this.props;
 
     return (
       <div key={number}>

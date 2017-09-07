@@ -35,6 +35,14 @@ router.get('/questions', (req, res) => {
   });
 });
 
+router.get('/scores', (req, res) => {
+  User.find({}, 'email score', (err, scores) => {
+    if (err) return res.json({ error: err });
+    if (!scores) return res.json({ success: false });
+    res.json({ success: true, scores });
+  });
+});
+
 router.put('/submit', (req, res) => {
   User.findOneAndUpdate(
     { email: req.body.email },
