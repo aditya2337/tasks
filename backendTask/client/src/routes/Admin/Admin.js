@@ -12,7 +12,21 @@ const Admin = props => (
       style={{ height: '90%' }}
       className="h-90 flex justify-center items-center">
       <Paper>
-        <InviteForm />
+        {props.isSendingInvite ? (
+          <span>Sending invite...</span>
+        ) : props.inviteSent ? (
+          <div>
+            <div>Email has been sent to {props.email}</div>
+            <button onClick={() => props.inviteStatus(false, null)}>
+              Send another invite?
+            </button>
+          </div>
+        ) : (
+          <InviteForm
+            sendInvite={props.sendInvite}
+            inviteStatus={props.inviteStatus}
+          />
+        )}
       </Paper>
     </div>
   </div>

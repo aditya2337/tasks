@@ -1,0 +1,4 @@
+{
+  "dbUri": "mongodb://aditya:aditya@ds129394.mlab.com:29394/scapic",
+  "secret": "node is awesome"
+}

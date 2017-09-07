@@ -1,6 +1,6 @@
 import React from 'react';
-import AdminInterface from './Admin';
+import AdminContainer from './AdminContainer';
 
-const Admin = props => <AdminInterface {...props} />;
+const Admin = props => <AdminContainer {...props} />;
 
 export default Admin;
