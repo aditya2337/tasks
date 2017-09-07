@@ -8,7 +8,8 @@ const UserSchema = new mongoose.Schema(
       index: { unique: true }
     },
     oauth_provider: String,
-    oauth_id: String
+    inviteToken: String,
+    score: Number
   },
   { collection: 'users' }
 );

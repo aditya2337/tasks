@@ -1,5 +1,6 @@
 const passport = require('passport');
 const User = require('./model/schema/userSchema');
+const Invite = require('./model/schema/inviteSchema');
 const ObjectId = require('mongodb').ObjectId;
 var GoogleStrategy = require('passport-google-oauth2').Strategy;
 
@@ -18,30 +19,35 @@ passport.use(
       passReqToCallback: true
     },
     function(request, accessToken, refreshToken, profile, done) {
-      console.log(profile.emails[0].value);
-      User.db.collection('users').findOne({
-        email: profile.emails[0].value
-      }, (err, user) => {
+      const token = request.query.state;
+      Invite.db.collection('invites').findOne({
+        token
+      }, (err, invite) => {
         if (err) return done(null, false, { message: err });
-        if (user) {
-          return done(null, user);
-        }
-
-        // if there is no user with that email
-        // create the user
-        var newUser = new User();
-
-        // set the user's local credentials
-        newUser.email = profile.emails[0].value;
-        newUser.oauth_provider = 'twitter';
-        newUser.oauth_id = profile.username;
-
-        // save the user
-        newUser.save(function(err) {
-          if (err) {
-            throw err;
+        if (!invite) return done(null, false, { message: err });
+        User.db.collection('users').findOne({
+          email: profile.emails[0].value
+        }, (err, user) => {
+          if (err) return done(null, false, { message: err });
+          if (user) {
+            return done(null, user);
           }
-          return done(null, newUser);
+
+          // if there is no user with that email
+          // create the user
+          var newUser = new User();
+
+          // set the user's local credentials
+          newUser.email = profile.emails[0].value;
+          newUser.inviteToken = token;
+          newUser.oauth_provider = 'google';
+          // save the user
+          newUser.save(function(err) {
+            if (err) {
+              throw err;
+            }
+            return done(null, newUser);
+          });
         });
       });
     }

@@ -1,8 +1,8 @@
 // All action types
 
-const login = {
+const admin = {
   REQUEST_SENDINVITE: 'REQUEST_SENDINVITE',
   RECEIVE_SENDINVITE: 'RECEIVE_SENDINVITE'
 };
 
-export default login;
+export default admin;

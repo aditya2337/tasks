@@ -1,6 +1,8 @@
 require('../passport');
 var express = require('express');
 var router = express.Router();
+var Invite = require('../model/schema/inviteSchema');
+var User = require('../model/schema/userSchema');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
 const uuidv1 = require('uuid/v1');
@@ -17,28 +19,43 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/not', function(req, res, next) {
-  res.json({ err: 'na bhao' });
+  res.json({ err: 'Failed' });
+});
+
+router.get('/auth/google/failure', (req, res) =>
+  res.redirect(`${config.host}/auth-failed`)
+);
+
+router.get('/check-validity', (req, res) => {
+  User.findOne({ token: req.query.token }, (err, user) => {
+    if (err) return res.json({ error: err });
+    if (!user) return res.json({ success: false });
+    return res.json({ success: true, user });
+  });
 });
 
 router.post('/send-mail', handleSendInvite);
 
 // OAUTH2
-router.get(
-  '/auth/google',
+router.get('/auth/google', function(req, res, next) {
   passport.authenticate('google', {
     scope: [
       'https://www.googleapis.com/auth/plus.login',
       'https://www.googleapis.com/auth/userinfo.email'
-    ]
-  })
-);
+    ],
+    state: req.query.token
+  })(req, res, next);
+});
 
 router.get(
   '/auth/google/callback',
   passport.authenticate('google', {
-    successRedirect: '/',
     failureRedirect: '/auth/google/failure'
-  })
+  }),
+  (req, res) => {
+    console.log(req.user);
+    res.redirect(`${config.host}/interview/${req.user.token}`);
+  }
 );
 
 function handleSendInvite(req, res) {
@@ -70,8 +87,27 @@ function handleSendInvite(req, res) {
         console.log(error);
         res.json({ error: 'Mail could not be sent' });
       } else {
-        console.log('Message sent: ' + info.response);
-        res.json({ status: 'success', data: info.response });
+        Invite.db.collection('invites').findOne({
+          email: req.body.email
+        }, (err, invite) => {
+          if (err) return done(null, false, { message: err });
+          if (invite) {
+            return res.json({ error: 'Email already sent' });
+          }
+
+          var newInvite = new Invite();
+
+          newInvite.email = req.body.email;
+          newInvite.token = token;
+
+          newInvite.save(function(err) {
+            if (err) {
+              throw err;
+            }
+          });
+          console.log('Message sent: ' + info.response);
+          res.json({ status: 'success', data: info.response });
+        });
       }
     });
   } else {
