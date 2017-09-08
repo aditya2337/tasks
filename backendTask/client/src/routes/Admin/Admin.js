@@ -14,6 +14,13 @@ const Admin = props => (
       <Paper>
         {props.isSendingInvite ? (
           <span>Sending invite...</span>
+        ) : props.mailError ? (
+          <div>
+            <div>{props.mailError}</div>
+            <button onClick={() => props.inviteError(null)}>
+              send someone else?
+            </button>
+          </div>
         ) : props.inviteSent ? (
           <div>
             <div>Email has been sent to {props.email}</div>

@@ -1,12 +1,17 @@
 import actionTypes from './actionTypes';
 import config from '../../../config/config';
 
-const { REQUEST_SENDINVITE, RECEIVE_SENDINVITE } = actionTypes;
+const { REQUEST_SENDINVITE, RECEIVE_SENDINVITE, INVITE_ERROR } = actionTypes;
 
 export const inviteStatus = (bool, email) => ({
   type: RECEIVE_SENDINVITE,
   inviteSent: bool,
   email
+});
+
+export const inviteError = err => ({
+  type: INVITE_ERROR,
+  mailError: err
 });
 
 export function sendInvite(email) {
@@ -33,7 +38,8 @@ export function sendInvite(email) {
         if (res.status && res.status === 'success') {
           dispatch(inviteStatus(true, email));
         } else if (res.error) {
-          console.error(res.error);
+          dispatch(inviteStatus(false, null));
+          dispatch(inviteError(res.error));
         }
       })
       .catch(e => console.error(e));

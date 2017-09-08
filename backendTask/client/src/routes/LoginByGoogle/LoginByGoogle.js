@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import Paper from 'material-ui/Paper';
+import config from '../../config/config';
 
 class LoginByGoogle extends Component {
   componentDidMount() {
@@ -25,8 +26,8 @@ class LoginByGoogle extends Component {
           ) : (
             <button>
               <a
-                href={`http://localhost:3000/auth/google?token=${this.props
-                  .match.params.token}`}>
+                href={`${config.URI}/auth/google?token=${this.props.match.params
+                  .token}`}>
                 Login
               </a>
             </button>

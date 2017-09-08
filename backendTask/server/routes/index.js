@@ -112,31 +112,31 @@ function handleSendInvite(req, res) {
   };
 
   if (req.body.email) {
-    transporter.sendMail(mailOptions, function(error, info) {
-      if (error) {
-        console.log(error);
-        res.json({ error: 'Mail could not be sent' });
+    Invite.db.collection('invites').findOne({
+      email: req.body.email
+    }, (err, invite) => {
+      if (err) return done(null, false, { message: err });
+      if (invite) {
+        return res.json({ error: 'Email already sent' });
       } else {
-        Invite.db.collection('invites').findOne({
-          email: req.body.email
-        }, (err, invite) => {
-          if (err) return done(null, false, { message: err });
-          if (invite) {
-            return res.json({ error: 'Email already sent' });
+        transporter.sendMail(mailOptions, function(error, info) {
+          if (error) {
+            console.log(error);
+            res.json({ error: 'Mail could not be sent' });
+          } else {
+            var newInvite = new Invite();
+
+            newInvite.email = req.body.email;
+            newInvite.token = token;
+
+            newInvite.save(function(err) {
+              if (err) {
+                throw err;
+              }
+            });
+            console.log('Message sent: ' + info.response);
+            res.json({ status: 'success', data: info.response });
           }
-
-          var newInvite = new Invite();
-
-          newInvite.email = req.body.email;
-          newInvite.token = token;
-
-          newInvite.save(function(err) {
-            if (err) {
-              throw err;
-            }
-          });
-          console.log('Message sent: ' + info.response);
-          res.json({ status: 'success', data: info.response });
         });
       }
     });
